@@ -1,0 +1,39 @@
+import {
+    check,
+    validationResult
+} from "express-validator";
+
+const validationAdmin = () => {
+
+    return [
+
+        check('nombre').notEmpty().escape().withMessage('El campo nombre esta vacio'),
+        check('correo').notEmpty().withMessage('El campo correo esta vacio'),
+        check('correo').isEmail().withMessage('El correo no es correcto'),
+
+        (req, res, next) => {
+            const errors = validationResult(req);
+
+            if (!errors.isEmpty()) {
+
+                const checkError = errors.array().map(error => error.msg);
+
+
+                res.status(400).json({
+
+                    msg: checkError
+
+                })
+
+                return;
+            }
+
+            next();
+        }
+
+    ]
+
+}
+
+
+export default validationAdmin
